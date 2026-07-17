@@ -125,6 +125,16 @@ def parse_resume(file_path: str) -> dict:
             "error": "No text could be extracted from the file after cleaning.",
         }
     
+    # ---- Resume Validation Layer ----
+    from validators.resume_validator import validate_resume_text
+    validation = validate_resume_text(cleaned_text)
+    if not validation["is_valid"]:
+        return {
+            "success": False,
+            "data": None,
+            "error": validation["error"],
+        }
+    
     # ---- Step 4: Detect resume sections ----
     sections = detect_sections(cleaned_text)
     
