@@ -34,21 +34,38 @@ import os
 import json
 
 # Import our modules
-from .validators.file_validator import validate_file, get_file_extension
-from .parsers.pdf_parser import extract_text_from_pdf
-from .parsers.docx_parser import extract_text_from_docx
-from .extractor.text_cleaner import clean_text
-from .extractor.section_detector import detect_sections
-from .extractor.info_extractor import (
-    extract_email,
-    extract_phone,
-    extract_name,
-    extract_linkedin,
-    extract_github,
-    extract_skills_list,
-    extract_languages_list,
-)
-from .models.resume_model import Resume
+try:
+    from .validators.file_validator import validate_file, get_file_extension
+    from .parsers.pdf_parser import extract_text_from_pdf
+    from .parsers.docx_parser import extract_text_from_docx
+    from .extractor.text_cleaner import clean_text
+    from .extractor.section_detector import detect_sections
+    from .extractor.info_extractor import (
+        extract_email,
+        extract_phone,
+        extract_name,
+        extract_linkedin,
+        extract_github,
+        extract_skills_list,
+        extract_languages_list,
+    )
+    from .models.resume_model import Resume
+except (ImportError, ValueError):
+    from validators.file_validator import validate_file, get_file_extension
+    from parsers.pdf_parser import extract_text_from_pdf
+    from parsers.docx_parser import extract_text_from_docx
+    from extractor.text_cleaner import clean_text
+    from extractor.section_detector import detect_sections
+    from extractor.info_extractor import (
+        extract_email,
+        extract_phone,
+        extract_name,
+        extract_linkedin,
+        extract_github,
+        extract_skills_list,
+        extract_languages_list,
+    )
+    from models.resume_model import Resume
 
 
 # ==========================================
@@ -126,7 +143,10 @@ def parse_resume(file_path: str) -> dict:
         }
     
     # ---- Resume Validation Layer ----
-    from .validators.resume_validator import validate_resume_text
+    try:
+        from .validators.resume_validator import validate_resume_text
+    except (ImportError, ValueError):
+        from validators.resume_validator import validate_resume_text
     validation = validate_resume_text(cleaned_text)
     if not validation["is_valid"]:
         return {

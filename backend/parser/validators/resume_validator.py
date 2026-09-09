@@ -24,7 +24,10 @@ WHY THIS FILE EXISTS:
 """
 
 import re
-from ..extractor.info_extractor import extract_email, extract_phone
+try:
+    from ..extractor.info_extractor import extract_email, extract_phone
+except (ImportError, ValueError):
+    from extractor.info_extractor import extract_email, extract_phone
 
 # Indicators and their corresponding weights/scores
 INDICATOR_WEIGHTS = {

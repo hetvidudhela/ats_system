@@ -23,11 +23,18 @@ import pytest
 # Add the parser directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from ..extractor.section_detector import (
-    detect_sections,
-    match_section_heading,
-    find_section_positions,
-)
+try:
+    from extractor.section_detector import (
+        detect_sections,
+        match_section_heading,
+        find_section_positions,
+    )
+except (ImportError, ValueError):
+    from ..extractor.section_detector import (
+        detect_sections,
+        match_section_heading,
+        find_section_positions,
+    )
 
 
 # ==========================================

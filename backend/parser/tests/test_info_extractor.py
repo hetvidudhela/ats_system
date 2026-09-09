@@ -25,16 +25,28 @@ import pytest
 # Add the parser directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from ..extractor.info_extractor import (
-    extract_email,
-    extract_phone,
-    extract_name,
-    extract_linkedin,
-    extract_github,
-    extract_skills_list,
-    extract_languages_list,
-    is_likely_name,
-)
+try:
+    from extractor.info_extractor import (
+        extract_email,
+        extract_phone,
+        extract_name,
+        extract_linkedin,
+        extract_github,
+        extract_skills_list,
+        extract_languages_list,
+        is_likely_name,
+    )
+except (ImportError, ValueError):
+    from ..extractor.info_extractor import (
+        extract_email,
+        extract_phone,
+        extract_name,
+        extract_linkedin,
+        extract_github,
+        extract_skills_list,
+        extract_languages_list,
+        is_likely_name,
+    )
 
 
 # ==========================================

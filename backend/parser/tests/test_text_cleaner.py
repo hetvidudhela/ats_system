@@ -24,14 +24,24 @@ import pytest
 # Add the parser directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from ..extractor.text_cleaner import (
-    clean_text,
-    replace_unicode_characters,
-    remove_special_characters,
-    normalize_whitespace,
-    remove_extra_blank_lines,
-    strip_lines,
-)
+try:
+    from extractor.text_cleaner import (
+        clean_text,
+        replace_unicode_characters,
+        remove_special_characters,
+        normalize_whitespace,
+        remove_extra_blank_lines,
+        strip_lines,
+    )
+except (ImportError, ValueError):
+    from ..extractor.text_cleaner import (
+        clean_text,
+        replace_unicode_characters,
+        remove_special_characters,
+        normalize_whitespace,
+        remove_extra_blank_lines,
+        strip_lines,
+    )
 
 
 # ==========================================
