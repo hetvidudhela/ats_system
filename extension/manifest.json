@@ -2,13 +2,16 @@
   "manifest_version": 3,
   "name": "ATS Resume Analyzer",
   "version": "1.0.0",
-  "description": "ATS Resume Analyzer Chrome Extension",
+  "description": "Smart ATS resume analyzer and job description matcher.",
   "action": {
     "default_popup": "popup.html"
   },
   "permissions": [
     "tabs",
-    "activeTab",
-    "storage"
+    "activeTab"
+  ],
+  "host_permissions": [
+    "http://localhost:57720/*",
+    "http://127.0.0.1:8000/*"
   ]
 }

@@ -88,7 +88,7 @@ def test_version_endpoint_without_slash():
 # =====================================================================
 
 def test_cors_preflight_flutter_web():
-    """Verify CORS headers respond correctly to Flutter Web origin."""
+    """Verify CORS headers respond correctly to legacy Flutter Web origin."""
     flutter_web_origin = "http://localhost:5000"
     response = client.options(
         "/analyze/",
@@ -102,6 +102,24 @@ def test_cors_preflight_flutter_web():
     assert response.headers.get("access-control-allow-origin") == flutter_web_origin
     assert "POST" in response.headers.get("access-control-allow-methods", "")
     assert response.headers.get("access-control-allow-credentials") == "true"
+
+
+def test_cors_preflight_flutter_web_port_57720():
+    """Verify CORS headers respond correctly to extension-bound Flutter Web port 57720."""
+    flutter_web_origin = "http://localhost:57720"
+    response = client.options(
+        "/analyze/",
+        headers={
+            "Origin": flutter_web_origin,
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "content-type",
+        },
+    )
+    assert response.status_code == 200
+    assert response.headers.get("access-control-allow-origin") == flutter_web_origin
+    assert "POST" in response.headers.get("access-control-allow-methods", "")
+    assert response.headers.get("access-control-allow-credentials") == "true"
+
 
 
 def test_cors_preflight_chrome_extension():

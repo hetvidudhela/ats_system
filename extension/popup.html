@@ -1,103 +1,306 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ATS Resume Analyzer</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Analyzer</title>
     <style>
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
-            font-family: "Segoe UI", sans-serif;
         }
 
         body {
-            width: 340px;
-            padding: 20px;
-            background: linear-gradient(135deg, #0052D4, #4364F7, #6FB1FC);
-            color: white;
+            margin: 0;
+            padding: 0;
+            width: 360px;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: #f7f9fc;
+            color: #172033;
         }
 
-        .card {
-            background: rgba(255,255,255,0.12);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 22px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.2);
+        /* Main container */
+        .container {
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .logo {
-            font-size: 55px;
-            margin-bottom: 10px;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #3B7BFB, #6C5CE7);
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 6px 16px rgba(59, 123, 251, 0.25);
         }
 
-        h1 {
+        .brand-text h1 {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 700;
+            color: #172033;
+        }
+
+        .brand-text span {
+            display: block;
+            margin-top: 2px;
+            font-size: 11px;
+            color: #7b8497;
+        }
+
+        /* AI Badge */
+        .ai-badge {
+            padding: 6px 9px;
+            border-radius: 20px;
+            background: #eef3ff;
+            color: #3B7BFB;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* Welcome section */
+        .welcome {
+            margin-bottom: 18px;
+        }
+
+        .welcome h2 {
+            margin: 0 0 7px 0;
             font-size: 22px;
-            margin-bottom: 8px;
+            line-height: 1.25;
+            color: #172033;
         }
 
-        p {
-            font-size: 14px;
-            color: rgba(255,255,255,0.9);
-            line-height: 1.5;
-            margin-bottom: 22px;
+        .welcome p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.55;
+            color: #6d7688;
         }
 
-        button {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 14px;
+        /* Analyzer Card */
+        .analyzer-card {
+            padding: 16px;
             background: white;
-            color: #0052D4;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: .3s;
+            border: 1px solid #e9edf5;
+            border-radius: 16px;
+            box-shadow: 0 5px 18px rgba(23, 32, 51, 0.06);
+            margin-bottom: 14px;
         }
 
-        button:hover {
-            transform: translateY(-3px);
-            background: #EDF4FF;
-            box-shadow: 0 12px 25px rgba(0,0,0,.25);
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #273149;
         }
 
-        .footer {
-            margin-top: 16px;
+        .card-icon {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9px;
+            background: #eef3ff;
+            color: #3B7BFB;
+            font-size: 15px;
+        }
+
+        /* Status items */
+        .status-list {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 11px;
+            border-radius: 10px;
+            background: #f8f9fc;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #3B7BFB;
+        }
+
+        .status-name {
             font-size: 12px;
-            color: rgba(255,255,255,.75);
+            font-weight: 600;
+            color: #414b60;
+        }
+
+        .status-value {
+            font-size: 10px;
+            font-weight: 600;
+            color: #8a93a5;
+        }
+
+        /* Analyze button */
+        .open-button {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 13px 16px;
+            border: none;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #3B7BFB, #536DFE);
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 7px 18px rgba(59, 123, 251, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .open-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 9px 22px rgba(59, 123, 251, 0.32);
+        }
+
+        .open-button:active {
+            transform: translateY(0);
+        }
+
+        .arrow {
+            font-size: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .open-button:hover .arrow {
+            transform: translateX(3px);
+        }
+
+        /* Info */
+        .info {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 12px;
+            padding: 10px 12px;
+            border-radius: 9px;
+            background: #f1f6ff;
+            color: #63708a;
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        .info-icon {
+            font-size: 13px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 17px;
+            font-size: 10px;
+            color: #a0a7b5;
         }
     </style>
-
 </head>
-
 <body>
-
-<div class="card">
-
-    <div class="logo">📄</div>
-
-    <h1>ATS Resume Analyzer</h1>
-
-    <p>
-        Analyze your resume, compare it with any job description,
-        improve your ATS score and get AI-powered suggestions.
-    </p>
-
-    <button id="openApp">
-        🚀 Launch Analyzer
-    </button>
-
-    <div class="footer">
-        Version 1.0
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="brand">
+            <div class="logo">A</div>
+            <div class="brand-text">
+                <h1>ATS Analyzer</h1>
+                <span>Smart Resume Analysis</span>
+            </div>
+        </div>
+        <div class="ai-badge">✦ AI POWERED</div>
     </div>
 
+    <!-- Welcome -->
+    <div class="welcome">
+        <h2>Improve your resume.</h2>
+        <p>
+            Compare your resume with a job description
+            and discover how well you match the role.
+        </p>
+    </div>
+
+    <!-- Analyzer Card -->
+    <div class="analyzer-card">
+        <div class="card-title">
+            <div class="card-icon">✓</div>
+            <span>ATS Analysis</span>
+        </div>
+
+        <div class="status-list">
+            <div class="status-item">
+                <div class="status-left">
+                    <div class="status-dot"></div>
+                    <span class="status-name">Resume</span>
+                </div>
+                <span class="status-value">Ready to analyze</span>
+            </div>
+
+            <div class="status-item">
+                <div class="status-left">
+                    <div class="status-dot"></div>
+                    <span class="status-name">Job Description</span>
+                </div>
+                <span class="status-value">Ready to compare</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Open Analyzer -->
+    <button id="openAnalyzer" class="open-button">
+        <span>Open ATS Analyzer</span>
+        <span class="arrow">→</span>
+    </button>
+
+    <!-- Info -->
+    <div class="info">
+        <span class="info-icon">💡</span>
+        <span>
+            Get ATS score, missing skills and personalized resume suggestions.
+        </span>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        ATS System • Resume Intelligence
+    </div>
 </div>
 
 <script src="popup.js"></script>
-
 </body>
 </html>

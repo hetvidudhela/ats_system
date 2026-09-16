@@ -1,0 +1,9 @@
+{
+  "manifest_version": 3,
+  "name": "ATS Analyzer",
+  "version": "1.0.0",
+  "description": "Analyze resumes against job descriptions.",
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
