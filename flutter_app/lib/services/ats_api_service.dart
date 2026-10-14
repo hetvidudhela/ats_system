@@ -167,4 +167,44 @@ class AtsApiService {
       return false;
     }
   }
+
+  /// Retrieves a temporary session created by the Chrome Extension.
+  Future<Map<String, dynamic>?> getSession(String sessionId) async {
+    final cleanId = sessionId.trim();
+    if (cleanId.isEmpty) return null;
+
+    try {
+      final uri = Uri.parse(ApiConfig.sessionEndpoint(cleanId));
+      final response = await _client.get(uri).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Session request timed out.'),
+      );
+
+      if (response.statusCode == 200) {
+        final dynamic decoded = jsonDecode(utf8.decode(response.bodyBytes));
+        if (decoded is Map<String, dynamic>) {
+          return decoded;
+        }
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Explicitly deletes a consumed temporary session from the backend.
+  Future<bool> deleteSession(String sessionId) async {
+    final cleanId = sessionId.trim();
+    if (cleanId.isEmpty) return false;
+
+    try {
+      final uri = Uri.parse(ApiConfig.sessionEndpoint(cleanId));
+      final response = await _client.delete(uri).timeout(
+        const Duration(seconds: 5),
+      );
+      return response.statusCode == 204;
+    } catch (_) {
+      return false;
+    }
+  }
 }

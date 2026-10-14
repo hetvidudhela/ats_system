@@ -35,3 +35,4 @@ class AnalyzeResponse(BaseModel):
     match_details: Optional[List[Dict[str, Any]]] = None
     suggestions: List[str] = Field(default_factory=list)
     parsed_resume: Optional[Dict[str, Any]] = None
+    eligibility: Optional[Dict[str, Any]] = None

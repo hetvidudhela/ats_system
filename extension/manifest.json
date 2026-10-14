@@ -1,4 +1,4 @@
-{
+﻿{
   "manifest_version": 3,
   "name": "ATS Resume Analyzer",
   "version": "1.0.0",
@@ -8,10 +8,16 @@
   },
   "permissions": [
     "tabs",
-    "activeTab"
+    "activeTab",
+    "storage",
+    "contextMenus"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "host_permissions": [
     "http://localhost:57720/*",
-    "http://127.0.0.1:8000/*"
+    "http://127.0.0.1:8000/*",
+    "http://localhost:8000/*"
   ]
 }

@@ -103,6 +103,7 @@ async def analyze_resume(
             match_details=report.get("match_details", []),
             suggestions=report.get("suggestions", []),
             parsed_resume=parsed_data,
+            eligibility=report.get("eligibility"),
         )
 
     finally:

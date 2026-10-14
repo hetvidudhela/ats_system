@@ -7,6 +7,8 @@ from app.core.logger import logger
 from app.api.health import router as health_router
 from app.api.version import router as version_router
 from app.api.analyze import router as analyze_router
+from app.api.ai import router as ai_router
+from app.api.session import router as session_router
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -27,11 +29,15 @@ app.add_middleware(
 app.include_router(health_router)
 app.include_router(version_router)
 app.include_router(analyze_router)
+app.include_router(ai_router)
+app.include_router(session_router)
 
 # Also mount under /api prefix for full backward/forward compatibility
 app.include_router(health_router, prefix="/api")
 app.include_router(version_router, prefix="/api")
 app.include_router(analyze_router, prefix="/api")
+app.include_router(ai_router, prefix="/api")
+app.include_router(session_router, prefix="/api")
 
 
 

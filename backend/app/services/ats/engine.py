@@ -16,6 +16,7 @@ from app.services.ats.matcher import (
 )
 from app.services.ats.scorer import compute_overall_ats_score
 from app.services.ats.suggestions import generate_actionable_suggestions
+from app.services.ats.eligibility import evaluate_candidate_eligibility
 
 
 class ATSEngine:
@@ -68,6 +69,12 @@ class ATSEngine:
                 project_relevance={"score": 0.0, "max_score": 15.0, "details": "No job description provided."},
                 match_details=[],
                 suggestions=["Please provide a comprehensive job description with clear requirements and skills."],
+                eligibility={
+                    "eligible": False,
+                    "warning": True,
+                    "status": "requirements_not_verified",
+                    "reasons": ["Job description is empty or too short to verify eligibility."],
+                },
             )
 
         # 1. Analyze Job Description
@@ -103,7 +110,16 @@ class ATSEngine:
             resume_data=resume_data,
         )
 
-        # 8. Assemble Complete Report
+        # 8. Evaluate Candidate Eligibility
+        eligibility = evaluate_candidate_eligibility(
+            overall_score=overall_score,
+            skills_summary=skills_summary,
+            exp_analysis=exp_analysis,
+            edu_analysis=edu_analysis,
+            jd_analysis=jd_analysis,
+        )
+
+        # 9. Assemble Complete Report
         return ATSReport(
             success=True,
             ats_score=overall_score,
@@ -122,6 +138,7 @@ class ATSEngine:
             project_relevance=proj_analysis.model_dump(),
             match_details=[d.model_dump() for d in match_details],
             suggestions=suggestions,
+            eligibility=eligibility.model_dump(),
         )
 
 

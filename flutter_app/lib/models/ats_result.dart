@@ -182,6 +182,8 @@ class ParsedResume {
   final String education;
   final String experience;
   final String projects;
+  final String rawText;
+  final Map<String, dynamic>? rawJson;
 
   const ParsedResume({
     this.name = '',
@@ -193,6 +195,8 @@ class ParsedResume {
     this.education = '',
     this.experience = '',
     this.projects = '',
+    this.rawText = '',
+    this.rawJson,
   });
 
   factory ParsedResume.fromJson(Map<String, dynamic>? json) {
@@ -210,8 +214,71 @@ class ParsedResume {
       education: json['education'] as String? ?? '',
       experience: json['experience'] as String? ?? '',
       projects: json['projects'] as String? ?? '',
+      rawText: json['raw_text'] as String? ?? '',
+      rawJson: json,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    if (rawJson != null && rawJson!.isNotEmpty) {
+      final copy = Map<String, dynamic>.from(rawJson!);
+      copy['skills'] = skills;
+      return copy;
+    }
+    return {
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'linkedin': linkedin,
+      'github': github,
+      'skills': skills,
+      'education': education,
+      'experience': experience,
+      'projects': projects,
+      'raw_text': rawText,
+    };
+  }
+}
+
+class EligibilityAssessment {
+  final bool? eligible;
+  final bool warning;
+  final String status;
+  final List<String> reasons;
+
+  const EligibilityAssessment({
+    this.eligible,
+    this.warning = false,
+    this.status = 'no_major_issues_detected',
+    this.reasons = const [],
+  });
+
+  factory EligibilityAssessment.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return const EligibilityAssessment();
+    return EligibilityAssessment(
+      eligible: json['eligible'] as bool?,
+      warning: json['warning'] as bool? ?? false,
+      status: json['status'] as String? ?? 'no_major_issues_detected',
+      reasons: (json['reasons'] as List<dynamic>?)
+              ?.map((e) => e.toString().trim())
+              .where((s) => s.isNotEmpty)
+              .toList() ??
+          const [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'eligible': eligible,
+      'warning': warning,
+      'status': status,
+      'reasons': reasons,
+    };
+  }
+
+  bool get isPotentiallyIneligible => status == 'potentially_ineligible';
+  bool get isRequirementsNotVerified => status == 'requirements_not_verified';
+  bool get isNoMajorIssues => status == 'no_major_issues_detected';
 }
 
 class AtsAnalysisResult {
@@ -233,6 +300,8 @@ class AtsAnalysisResult {
   final List<SkillMatchDetail> matchDetails;
   final List<String> suggestions;
   final ParsedResume? parsedResume;
+  final EligibilityAssessment? eligibility;
+  final Map<String, dynamic>? rawJson;
 
   const AtsAnalysisResult({
     this.success = true,
@@ -253,6 +322,8 @@ class AtsAnalysisResult {
     this.matchDetails = const [],
     this.suggestions = const [],
     this.parsedResume,
+    this.eligibility,
+    this.rawJson,
   });
 
   factory AtsAnalysisResult.fromJson(Map<String, dynamic> json) {
@@ -302,7 +373,33 @@ class AtsAnalysisResult {
       parsedResume: ParsedResume.fromJson(
         json['parsed_resume'] as Map<String, dynamic>?,
       ),
+      eligibility: EligibilityAssessment.fromJson(
+        json['eligibility'] as Map<String, dynamic>?,
+      ),
+      rawJson: json,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    if (rawJson != null && rawJson!.isNotEmpty) {
+      return Map<String, dynamic>.from(rawJson!);
+    }
+    return {
+      'success': success,
+      'score': score,
+      'ats_score': atsScore,
+      'matched_skills': matchedSkills,
+      'missing_skills': missingSkills,
+      'matched_keywords': matchedKeywords,
+      'missing_keywords': missingKeywords,
+      'required_matched': requiredMatched,
+      'required_missing': requiredMissing,
+      'preferred_matched': preferredMatched,
+      'preferred_missing': preferredMissing,
+      'suggestions': suggestions,
+      'parsed_resume': parsedResume?.toJson(),
+      'eligibility': eligibility?.toJson(),
+    };
   }
 
   String get matchRatingText {
@@ -313,6 +410,7 @@ class AtsAnalysisResult {
     return 'Low Match';
   }
 }
+
 
 extension _ListMapFilter on List<dynamic> {
   Iterable<Map<String, dynamic>> filterJsonMaps() sync* {

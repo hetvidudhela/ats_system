@@ -89,6 +89,7 @@ class ATSReport(BaseModel):
     project_relevance: dict[str, Any]
     match_details: List[dict[str, Any]] = Field(default_factory=list)
     suggestions: List[str] = Field(default_factory=list)
+    eligibility: Optional[dict[str, Any]] = None
 
     def to_dict(self) -> dict[str, Any]:
         return self.model_dump()

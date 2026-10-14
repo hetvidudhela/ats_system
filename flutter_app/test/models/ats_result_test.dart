@@ -146,5 +146,60 @@ void main() {
       expect(AtsAnalysisResult.fromJson({"score": 42}).matchRatingText, 'Moderate Match');
       expect(AtsAnalysisResult.fromJson({"score": 25}).matchRatingText, 'Low Match');
     });
+
+    test('parses eligibility assessment correctly from JSON', () {
+      final json = {
+        "score": 35,
+        "eligibility": {
+          "eligible": false,
+          "warning": true,
+          "status": "potentially_ineligible",
+          "reasons": [
+            "Overall ATS score is 35%, which is below the 40% threshold.",
+            "Only 1 of 8 required skills matched."
+          ]
+        }
+      };
+
+      final result = AtsAnalysisResult.fromJson(json);
+
+      expect(result.eligibility, isNotNull);
+      expect(result.eligibility!.eligible, isFalse);
+      expect(result.eligibility!.warning, isTrue);
+      expect(result.eligibility!.status, 'potentially_ineligible');
+      expect(result.eligibility!.isPotentiallyIneligible, isTrue);
+      expect(result.eligibility!.isRequirementsNotVerified, isFalse);
+      expect(result.eligibility!.reasons.length, 2);
+      expect(result.eligibility!.reasons[0], contains('below the 40% threshold'));
+
+      // Test toJson roundtrip
+      final serialized = result.toJson();
+      expect(serialized['eligibility'], isNotNull);
+      expect(serialized['eligibility']['warning'], isTrue);
+      expect(serialized['eligibility']['reasons'].length, 2);
+    });
+
+    test('handles unverified eligibility requirements', () {
+      final json = {
+        "score": 65,
+        "eligibility": {
+          "eligible": null,
+          "warning": true,
+          "status": "requirements_not_verified",
+          "reasons": [
+            "Required Bachelor's Degree could not be verified from the resume."
+          ]
+        }
+      };
+
+      final result = AtsAnalysisResult.fromJson(json);
+
+      expect(result.eligibility, isNotNull);
+      expect(result.eligibility!.eligible, isNull);
+      expect(result.eligibility!.warning, isTrue);
+      expect(result.eligibility!.isRequirementsNotVerified, isTrue);
+      expect(result.eligibility!.isPotentiallyIneligible, isFalse);
+      expect(result.eligibility!.reasons.single, contains('could not be verified'));
+    });
   });
 }

@@ -40,4 +40,7 @@ class ApiConfig {
 
   /// Version check endpoint.
   static String get versionEndpoint => '$baseUrl/version/';
+
+  /// Session retrieval endpoint for extension-to-web handoff.
+  static String sessionEndpoint(String sessionId) => '$baseUrl/session/$sessionId';
 }
